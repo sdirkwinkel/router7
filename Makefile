@@ -7,19 +7,11 @@ PKGS := github.com/rtr7/router7/cmd/... \
 	github.com/gokrazy/gdns
 
 image:
-ifndef DIR
-	@echo variable DIR unset
-	false
-endif
 	go install github.com/gokrazy/tools/cmd/gokr-packer@latest
-	GOARCH=amd64 gokr-packer \
-		-gokrazy_pkgs=github.com/gokrazy/gokrazy/cmd/ntp,github.com/gokrazy/gokrazy/cmd/randomd \
-		-kernel_package=github.com/rtr7/kernel \
-		-firmware_package=github.com/rtr7/kernel \
-		-eeprom_package= \
-		-overwrite_boot=${DIR}/boot.img \
-		-overwrite_root=${DIR}/root.img \
-		-overwrite_mbr=${DIR}/mbr.img \
+	GOARCH=arm64 gokr-packer \
+		-gokrazy_pkgs=github.com/gokrazy/gokrazy/cmd/ntp,github.com/gokrazy/gokrazy/cmd/randomd,github.com/gokrazy/serial-busybox \
+		-kernel_package=github.com/sdirkwinkel/gokr-kernel \
+		-overwrite=/dev/disk/by-id/usb-Generic_STORAGE_DEVICE-0:0 \
 		-serial_console=ttyS0,115200n8 \
 		-hostname=router7 \
 		${PKGS}

@@ -330,6 +330,12 @@ func applyInterfaces(dir, root string) error {
 	}
 	for _, l := range links {
 		attr := l.Attrs()
+		addr := attr.HardwareAddr.String()
+		log.Printf("addr %s %s", addr, attr.Name)
+	}
+
+	for _, l := range links {
+		attr := l.Attrs()
 		// TODO: prefix log line with details about the interface.
 		// link &{LinkAttrs:{Index:2 MTU:1500 TxQLen:1000 Name:eth0 HardwareAddr:00:0d:b9:49:70:18 Flags:broadcast|multicast RawFlags:4098 ParentIndex:0 MasterIndex:0 Namespace:<nil> Alias: Statistics:0xc4200f45f8 Promisc:0 Xdp:0xc4200ca180 EncapType:ether Protinfo:<nil> OperState:down NetNsID:0 NumTxQueues:0 NumRxQueues:0 Vfs:[]}}, attr &{Index:2 MTU:1500 TxQLen:1000 Name:eth0 HardwareAddr:00:0d:b9:49:70:18 Flags:broadcast|multicast RawFlags:4098 ParentIndex:0 MasterIndex:0 Namespace:<nil> Alias: Statistics:0xc4200f45f8 Promisc:0 Xdp:0xc4200ca180 EncapType:ether Protinfo:<nil> OperState:down NetNsID:0 NumTxQueues:0 NumRxQueues:0 Vfs:[]}
 
@@ -337,7 +343,16 @@ func applyInterfaces(dir, root string) error {
 			details InterfaceDetails
 			ok      bool
 		)
+		if attr.Name == "eth1" {
+			hwaddr, err := net.ParseMAC("e4:5f:01:64:b4:10")
+			if err != nil {
+				return fmt.Errorf("ParseMAC: %v", err)
+			}
+			netlink.LinkSetHardwareAddr(l, hwaddr)
+			attr.HardwareAddr = hwaddr
+		}
 		addr := attr.HardwareAddr.String()
+		log.Printf("addr %s %s", addr, attr.Name)
 		if addr == "" {
 			details, ok = byName[attr.Name]
 			if !ok {
