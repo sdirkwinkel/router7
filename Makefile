@@ -12,6 +12,14 @@ PKGS :=	github.com/rtr7/router7/cmd/dhcp4 \
 # github.com/gokrazy/breakglass \
 # github.com/rtr7/router7/cmd/dyndns \
 
+update:
+	go install github.com/gokrazy/tools/cmd/gokr-packer@latest
+	GOKRAZY_UPDATE=http://gokrazy:sGWEGErVFOBmFoUqAN5j@192.168.0.1/ GOARCH=arm64 gokr-packer \
+		-gokrazy_pkgs=github.com/gokrazy/gokrazy/cmd/ntp,github.com/gokrazy/gokrazy/cmd/randomd,github.com/gokrazy/serial-busybox \
+		-kernel_package=github.com/sdirkwinkel/gokr-kernel \
+		-serial_console=ttyS0,115200n8 \
+		-hostname=router7 \
+		${PKGS}
 
 image:
 	go install github.com/gokrazy/tools/cmd/gokr-packer@latest
@@ -59,8 +67,8 @@ strace:
 	# integration tests
 	(cd /tmp && go test -c router7) && ${SUDO} strace -f -o /tmp/st -s 2048 /tmp/router7.test -test.v #-test.race
 
-update:
-	rtr7-safe-update -build_command='make -C ~/go/src/github.com/rtr7/router7 image DIR=$$GOKR_DIR'
+#update:
+#	rtr7-safe-update -build_command='make -C ~/go/src/github.com/rtr7/router7 image DIR=$$GOKR_DIR'
 
 # sudo ip link add link enp0s31f6 name macvtap0 type macvtap
 # sudo ip link set macvtap0 address 52:55:00:d1:55:03 up
