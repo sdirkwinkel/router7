@@ -74,10 +74,8 @@ func NewServer(addr, domain string) *Server {
 		domain: domain,
 		upstream: []string{
 			// https://developers.google.com/speed/public-dns/docs/using#google_public_dns_ip_addresses
-			"8.8.8.8:53",
-			"8.8.4.4:53",
-			"[2001:4860:4860::8888]:53",
-			"[2001:4860:4860::8844]:53",
+			"172.22.0.1:53",
+			"1.1.1.1:53",
 		},
 		sometimes: rate.NewLimiter(rate.Every(1*time.Second), 1), // at most once per second
 		hostname:  hostname,
@@ -154,7 +152,7 @@ func (s *Server) probeUpstreamLatency() {
 			defer wg.Done()
 			// resolve a most-definitely cached record
 			m := new(dns.Msg)
-			m.SetQuestion("google.ch.", dns.TypeA)
+			m.SetQuestion("google.de.", dns.TypeA)
 			start := time.Now()
 			_, _, err := s.client.Exchange(m, u)
 			rtt := time.Since(start)
