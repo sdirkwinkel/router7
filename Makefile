@@ -1,10 +1,17 @@
 SUDO=GOPATH=$(shell go env GOPATH) sudo --preserve-env=GOPATH
 
-PKGS := github.com/rtr7/router7/cmd/... \
-	github.com/gokrazy/breakglass \
-	github.com/gokrazy/timestamps \
-	github.com/stapelberg/zkj-nas-tools/wolgw \
-	github.com/gokrazy/gdns
+PKGS :=	github.com/rtr7/router7/cmd/dhcp4 \
+	github.com/rtr7/router7/cmd/dhcp4d \
+	github.com/rtr7/router7/cmd/dnsd \
+	github.com/rtr7/router7/cmd/netconfigd \
+	github.com/gokrazy/timestamps
+
+# github.com/rtr7/router7/cmd/dyndns \
+# github.com/stapelberg/zkj-nas-tools/wolgw \
+# github.com/gokrazy/gdns
+# github.com/gokrazy/breakglass \
+# github.com/rtr7/router7/cmd/dyndns \
+
 
 image:
 	go install github.com/gokrazy/tools/cmd/gokr-packer@latest
