@@ -30,13 +30,13 @@ func TestDHCP4(t *testing.T) {
 	if pcappath != "" {
 		pcappath = filepath.Join(pcappath, "dhcp4.pcap")
 	}
-	conn, err := pcapreplayer.NewDHCP4Conn("testdata/fiber7.pcap", pcappath)
+	conn, err := pcapreplayer.NewDHCP4Conn("testdata/heli-net.pcap", pcappath)
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer conn.Close()
 
-	mac, err := net.ParseMAC("d8:58:d7:00:4e:df")
+	mac, err := net.ParseMAC("46:09:23:63:35:87")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,7 +48,7 @@ func TestDHCP4(t *testing.T) {
 		connection:   conn,
 		generateXID: func() uint32 {
 			// TODO: read the transaction ID from the pcap file
-			return 0x7708d724
+			return 0xa312465b
 		},
 	}
 
@@ -58,13 +58,13 @@ func TestDHCP4(t *testing.T) {
 	}
 	got := c.Config()
 	want := Config{
-		RenewAfter: now.Add(13*time.Minute + 24*time.Second),
-		ClientIP:   "85.195.207.62",
-		SubnetMask: "255.255.255.128",
-		Router:     "85.195.207.1",
+		RenewAfter: now.Add(3*time.Minute + 0*time.Second),
+		ClientIP:   "188.136.96.146",
+		SubnetMask: "255.255.248.0",
+		Router:     "188.136.96.1",
 		DNS: []string{
-			"77.109.128.2",
-			"213.144.129.20",
+			"212.37.37.60",
+			"212.37.37.50",
 		},
 	}
 	if diff := cmp.Diff(want, got); diff != "" {
